@@ -1,11 +1,11 @@
 <?php
     // Test http options
-    include '../http.php';
+    include 'util/http.php';
     echo "Testing http method used:\n";
     show_method();
 
     // Load config options
-    include '../config/resync-config.php';
+    include 'config/resync-config.php';
 
     // Load a test resource list
     include 'ResyncResourcelist.php';
