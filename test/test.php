@@ -1,8 +1,11 @@
 <?php
     // Test http options
-    include 'util/http.php';
+    include '../http.php';
     echo "Testing http method used:\n";
     show_method();
+
+    // Load config options
+    include '../config/resync-config.php';
 
     // Load a test resource list
     include 'ResyncResourcelist.php';
@@ -11,4 +14,4 @@
 
     // Baseline download the list (as at 1st Jan 1970)
     $date = new DateTime("1970-01-01T01:00:00Z", new DateTimeZone("UTC"));
-    $resourcelist->baseline('/resync', $date, false);
+    $resourcelist->baseline($resync_test_savedir, $date, false);

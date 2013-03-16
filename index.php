@@ -1,1 +1,5 @@
-ResourceSync PHP Library
+<?php
+
+    header('Location: ./web/');
+
+?>
