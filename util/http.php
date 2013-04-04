@@ -2,9 +2,6 @@
     // Whether or files can be opened directly, or if curl will be required
     $allow_url_fopen = ini_get('allow_url_fopen');
 
-    // Load the config file
-    require_once('./config/resync-config.php');
-
     function http_get($url) {
         global $allow_url_fopen, $resync_delay;
         sleep($resync_delay);

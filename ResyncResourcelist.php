@@ -25,12 +25,15 @@ class ResyncResourcelist {
     // Whether or not to display debug information
     private $debug = true;
 
+    // Whether the debugging messages are for display in HTML or not
+    private $htmldebug = false;
+
     // Create the new resourcelist
     function __construct($url) {
         $this->url = $url;
         $xmllist = http_get($this->url);
         $this->xml = simplexml_load_string($xmllist);
-        if ($this->debug) print_r($this->xml);
+        //if ($this->debug) print_r($this->xml);
     }
 
     // Baseline sync (download everything)
@@ -144,13 +147,20 @@ class ResyncResourcelist {
     }
 
     // Whether to display debug messages or not
-    function enableDebug($debug = true) {
+    function enableDebug($debug = true, $html = false) {
         $this->debug = $debug;
+        $this->htmldebug = $html;
     }
 
     // Display a debug mesage
     private function debug($message) {
-        if ($this->debug) echo $message . "\n";
+        if ($this->debug) echo $message;
+        if ($this->htmldebug) {
+            echo "<br />\n";
+            ob_flush();
+        } else {
+            echo "\n";
+        }
     }
 }
 ?>

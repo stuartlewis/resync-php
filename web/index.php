@@ -11,6 +11,14 @@
         Scripts to test the <a href="http://www.openarchives.org/rs/">ResourceSync</a> <a href="https://github.com/stuartlewis/resync-php">PHP Library</a>.
         <ul>
             <li><strong>Test files:</strong> <?=$resync_test_savedir?></li>
+            <li><strong>Delay between downloading files:</strong> <?=$resync_delay?> seconds</li>
         </ul>
+
+        <h2>Perform operations:</h2>
+        <form action="./baseline/" method="get">
+            <ul>
+                <li><strong>Baseline sync:</strong> <input type="text" name="url" size="80" value="http://resync.library.cornell.edu/arxiv-q-bio/resourcelist.xml"/><input type="submit" /></li>
+            </ul>
+        </form>
     </body>
 </html>
