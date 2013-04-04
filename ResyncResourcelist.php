@@ -10,6 +10,18 @@ class ResyncResourcelist {
     // The resourcelist raw XML
     private $xml;
 
+    // How many files downloaded
+    private $downloadcount = 0;
+
+    // How many files skipped
+    private $skipcount = 0;
+
+    // How long the downloads took (in seconds)
+    private $downloadtimer = 0;
+
+    // How large the downloads were (in kilobytes)
+    private $downloadsize = 0;
+
     // Whether or not to display debug information
     private $debug = true;
 
@@ -23,6 +35,9 @@ class ResyncResourcelist {
 
     // Baseline sync (download everything)
     function baseline($directory, $lastrun, $clear = false, $checksum = true, $force = false) {
+        // Start the timer
+        $starttime = microtime(true);
+
         // First clear the directory?
         if ($clear) {
             rmdir_recursive($directory, false);
@@ -64,6 +79,7 @@ class ResyncResourcelist {
                 if ($md5 == $cksum) {
                     $exists = true;
                     $this->debug('  - Checksum matches, skipping...');
+                    $this->skipcount++;
                 } else {
                     $this->debug('  - Checksum does not match, not skipping');
                 }
@@ -80,11 +96,14 @@ class ResyncResourcelist {
                 $timer = $end - $start;
                 $speed = $filesize / $timer;
                 $this->debug('  - Filesize: ' . $filesize . ' Time: ' . $timer . ' Speed: ' . $speed);
+                $this->downloadcount++;
+                $this->downloadsize += $filesize;
             } else if ($exists) {
 
             } else {
                 $this->debug('  - Skipping! lastmod: ' . $lastmod->format('Y-m-d H:i:s') .
                              ' is before last run: ' . $lastrun->format('Y-m-d H:i:s'));
+                $this->skipcount++;
             }
 
             // Checksum the file?
@@ -98,6 +117,30 @@ class ResyncResourcelist {
                 }
             }
         }
+
+        // End the timer
+        $endtime = microtime(true);
+        $this->downloadtimer = $endtime - $starttime;
+    }
+
+    // Return the number of downloaded files
+    function getDownloadedFileCount() {
+        return $this->downloadcount;
+    }
+
+    // Return the number of skipped files
+    function getSkippedFileCount() {
+        return $this->skipcount;
+    }
+
+    // Return the total download size
+    function getDownloadSize() {
+        return $this->downloadsize;
+    }
+
+    // Return the total download duration
+    function getDownloadDuration() {
+        return $this->downloadtimer;
     }
 
     // Whether to display debug messages or not
