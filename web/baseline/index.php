@@ -19,7 +19,7 @@ include '../../config/resync-config.php';
 
     // Load a test resource list
     include '../../ResyncResourcelist.php';
-    $resourcelist = new ResyncResourcelist('http://resync.library.cornell.edu/arxiv-q-bio/resourcelist.xml');
+    $resourcelist = new ResyncResourcelist($_GET['url']);
     $resourcelist->enableDebug(true, true);
 
     // Baseline download the list (as at 1st Jan 1970)
