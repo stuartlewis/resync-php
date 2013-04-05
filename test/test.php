@@ -7,6 +7,24 @@
     // Load config options
     include 'config/resync-config.php';
 
+    // Test discovery mechanism
+    include 'ResyncDiscover.php';
+    $host = 'http://amazon.com/';
+    $resyncdiscover = new ResyncDiscover($host);
+    $sitemaps = $resyncdiscover->getSitemaps();
+    echo $host . ' - There were ' . count($sitemaps) . ' sitemaps found:' . "\n";
+    foreach ($sitemaps as $sitemap) {
+        echo ' - ' . $sitemap . "\n";
+    }
+    $host = 'http://resync.library.cornell.edu/';
+    $resyncdiscover = new ResyncDiscover($host);
+    $sitemaps = $resyncdiscover->getSitemaps();
+    echo $host . ' - There were ' . count($sitemaps) . ' sitemaps found:' . "\n";
+    foreach ($sitemaps as $sitemap) {
+        echo ' - ' . $sitemap . "\n";
+    }
+    die();
+
     // Load a test resource list
     include 'ResyncResourcelist.php';
     $resourcelist = new ResyncResourcelist('http://resync.library.cornell.edu/arxiv-q-bio/resourcelist.xml');

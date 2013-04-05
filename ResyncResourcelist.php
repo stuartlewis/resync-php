@@ -4,6 +4,7 @@ include_once('util/http.php');
 include_once('util/file.php');
 
 class ResyncResourcelist {
+
     // The URL of the resource list
     public $url;
 
@@ -23,7 +24,7 @@ class ResyncResourcelist {
     private $downloadsize = 0;
 
     // Whether or not to display debug information
-    private $debug = true;
+    private $debug = false;
 
     // Whether the debugging messages are for display in HTML or not
     private $htmldebug = false;
