@@ -48,6 +48,11 @@ class ResyncDiscover {
         return $this->sitemaps;
     }
 
+    // Return the fully formatted URL
+    function getURL() {
+        return $this->url;
+    }
+
     // Whether to display debug messages or not
     function enableDebug($debug = true, $html = false) {
         $this->debug = $debug;

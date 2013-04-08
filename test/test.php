@@ -23,7 +23,6 @@
     foreach ($sitemaps as $sitemap) {
         echo ' - ' . $sitemap . "\n";
     }
-    die();
 
     // Load a test resource list
     include 'ResyncResourcelist.php';
