@@ -158,6 +158,7 @@ class ResyncResourcelist {
         if ($this->debug) echo $message;
         if ($this->htmldebug) {
             echo "<br />\n";
+            flush();
             ob_flush();
         } else {
             echo "\n";
