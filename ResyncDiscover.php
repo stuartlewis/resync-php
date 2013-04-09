@@ -30,7 +30,7 @@ class ResyncDiscover {
         }
 
         $this->url = $url . '.well-known/resourcesync';
-        $response = get_headers($url);
+        $response = get_headers($this->url);
         if ($response[0] == 'HTTP/1.1 200 OK') {
             $xmllist = http_get($this->url);
             $this->xml = simplexml_load_string($xmllist);
