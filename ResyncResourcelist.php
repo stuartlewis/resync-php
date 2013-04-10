@@ -146,7 +146,7 @@ class ResyncResourcelist {
 
             // Check if file has been updated since last run?
             $lastmod = new DateTime($url->lastmod, new DateTimeZone("UTC"));
-            if (($lastmod > $lastrun) && (! $exists) && ($pretend)) {
+            if (($lastmod > $lastrun) && (! $exists)) {
                 $this->debug(' - Downloading file: ' . $build);
                 if (! $pretend) {
                     $start = microtime(true);
