@@ -38,7 +38,13 @@ class ResyncResourcelist {
     }
 
     // Baseline sync (download everything)
-    function baseline($directory, $lastrun, $clear = false, $checksum = true, $force = false) {
+    // $directory = Where to store the files
+    // $lastrun = Date of last run
+    // $clear = Whether to remove all files before running (normally false)
+    // $checksum = Whether to check file checksums (normally true)
+    // $force = Whether to force the download of files, even if they haven't changed (normally false)
+    // $pretend = Pretend to download files - useful for testing large syncs (normally false)
+    function baseline($directory, $lastrun, $clear = false, $checksum = true, $force = false, $pretend = false) {
         // Start the timer
         $starttime = microtime(true);
 
@@ -76,7 +82,7 @@ class ResyncResourcelist {
 
             // Does the file exist already?
             $exists = false;
-            if (file_exists($build) && (! $force)) {
+            if (file_exists($build) && (! $force) && (! $pretend)) {
                 // Does the checksum match?  If so, we can skip the download later
                 $md5 = base64_encode(md5_file($build, true));
                 $this->debug(' - File already exists, check the checksum:');
@@ -89,19 +95,23 @@ class ResyncResourcelist {
                 }
             }
 
-            // Check if file had been updated since last run?
+            // Check if file has been updated since last run?
             $lastmod = new DateTime($url->lastmod, new DateTimeZone("UTC"));
-            if (($lastmod > $lastrun) && (! $exists)) {
+            if (($lastmod > $lastrun) && (! $exists) && ($pretend)) {
                 $this->debug(' - Downloading file: ' . $build);
-                $start = microtime(true);
-                http_get_save($url->loc, $build);
-                $end = microtime(true);
-                $filesize = filesize($build);
-                $timer = $end - $start;
-                $speed = $filesize / $timer;
-                $this->debug('  - Filesize: ' . $filesize . ' Time: ' . $timer . ' Speed: ' . $speed);
+                if (! $pretend) {
+                    $start = microtime(true);
+                    http_get_save($url->loc, $build);
+                    $filesize = filesize($build);
+                    $end = microtime(true);
+                    $timer = $end - $start;
+                    $speed = $filesize / $timer;
+                    $this->debug('  - Filesize: ' . $filesize . ' Time: ' . $timer . ' Speed: ' . $speed);
+                    $this->downloadsize += $filesize;
+                } else {
+                    $this->debug('  - PRETEND mode: not really downloading file');
+                }
                 $this->downloadcount++;
-                $this->downloadsize += $filesize;
             } else if ($exists) {
 
             } else {
@@ -111,7 +121,7 @@ class ResyncResourcelist {
             }
 
             // Checksum the file?
-            if (($checksum) && (!$exists)) {
+            if (($checksum) && (!$exists) && (! $pretend)) {
                 $md5 = base64_encode(md5_file($build, true));
                 $this->debug(' - Checking checksum: ' . $algorithm . ' with value of ' . $cksum);
                 if ($md5 == $cksum) {
