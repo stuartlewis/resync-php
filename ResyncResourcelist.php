@@ -11,6 +11,9 @@ class ResyncResourcelist {
     // The resourcelist raw XML
     private $xml;
 
+    // Is the top level file a sitemapindex or urlset
+    private $sitemap = false;
+
     // How many files downloaded
     private $downloadcount = 0;
 
@@ -33,8 +36,15 @@ class ResyncResourcelist {
     function __construct($url) {
         $this->url = $url;
         $xmllist = http_get($this->url);
-        $this->xml = simplexml_load_string($xmllist);
-        //if ($this->debug) print_r($this->xml);
+        $xml = simplexml_load_string($xmllist);
+
+        // Is this a sitemap index or a urlset?
+        if ($xml->getName() == 'sitemapindex') {
+            $this->sitemap = true;
+        } else {
+            $this->sitemap = false;
+        }
+        $this->xml = $xml;
     }
 
     // Baseline sync (download everything)
