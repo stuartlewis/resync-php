@@ -8,8 +8,11 @@ class ResyncResourcelist {
     // The URL of the resource list
     public $url;
 
-    // The resourcelist raw XML
+    // The urlset raw XML
     private $xml;
+
+    // The sitemapindex raw XML
+    private $sitemapxml;
 
     // Is the top level file a sitemapindex or urlset
     private $sitemap = false;
@@ -38,13 +41,14 @@ class ResyncResourcelist {
         $xmllist = http_get($this->url);
         $xml = simplexml_load_string($xmllist);
 
-        // Is this a sitemap index or a urlset?
+        // Is this a sitemapindex or a urlset?
         if ($xml->getName() == 'sitemapindex') {
             $this->sitemap = true;
+            $this->sitemapxml = $xml;
         } else {
             $this->sitemap = false;
+            $this->xml = $xml;
         }
-        $this->xml = $xml;
     }
 
     // Baseline sync (download everything)
@@ -63,6 +67,41 @@ class ResyncResourcelist {
             rmdir_recursive($directory, false);
         }
 
+        // Do we need to first process a sitemapindex?
+        if ($this->sitemap) {
+            $this->processSitemapindex($this->sitemapxml, $directory, $lastrun, $checksum, $force, $pretend);
+        } else {
+            $this->processUrlset($directory, $lastrun, $checksum, $force, $pretend);
+        }
+
+        // End the timer
+        $endtime = microtime(true);
+        $this->downloadtimer = $endtime - $starttime;
+    }
+
+    private function processSitemapindex($sitemapxml, $directory, $lastrun, $checksum = true, $force = false, $pretend = false) {
+        // Sitemap counter
+        $total = count($sitemapxml->sitemap);
+        $count = 1;
+
+        // Iterate through each sitemap->loc
+        foreach($sitemapxml->sitemap as $url) {
+            $this->debug('Processing sitemap (' . $count++ . ' of ' . $total . '): ' . $url->loc);
+
+            $xmllist = http_get($url->loc);
+            $xml = simplexml_load_string($xmllist);
+
+            // Is this a sitemapindex or a urlset?
+            if ($xml->getName() == 'sitemapindex') {
+                $this->processSitemapindex($xml, $directory, $lastrun, $checksum, $force, $pretend);
+            } else {
+                $this->xml = $xml;
+                $this->processUrlset($directory, $lastrun, $checksum, $force, $pretend);
+            }
+        }
+    }
+
+    private function processUrlset($directory, $lastrun, $checksum = true, $force = false, $pretend = false) {
         // File counter
         $total = count($this->xml->url);
         $count = 1;
@@ -141,10 +180,6 @@ class ResyncResourcelist {
                 }
             }
         }
-
-        // End the timer
-        $endtime = microtime(true);
-        $this->downloadtimer = $endtime - $starttime;
     }
 
     // Return the number of downloaded files
