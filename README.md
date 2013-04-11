@@ -13,10 +13,12 @@ not be deployed in a live server.
 Basic library methods:
 
  Discovery:
-     $host = 'http://resync.library.cornell.edu/';
-     $resyncdiscover = new ResyncDiscover($host);
-     $sitemaps = $resyncdiscover->getSitemaps();
-     echo $host . ' - There were ' . count($sitemaps) . ' sitemaps found:' . "\n";
-     foreach ($sitemaps as $sitemap) {
-         echo ' - ' . $sitemap . "\n";
-     }
+ ```
+ $host = 'http://resync.library.cornell.edu/';
+ $resyncdiscover = new ResyncDiscover($host);
+ $sitemaps = $resyncdiscover->getSitemaps();
+ echo $host . ' - There were ' . count($sitemaps) . ' sitemaps found:' . "\n";
+ foreach ($sitemaps as $sitemap) {
+     echo ' - ' . $sitemap . "\n";
+ }
+ ```
