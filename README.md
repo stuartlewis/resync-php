@@ -2,7 +2,7 @@ resync-php
 ==========
 
 ResourceSync PHP Client Library
- - http://www.openarchives.org/rs/
+* http://www.openarchives.org/rs/
 
 Test by running 'php test/test.php' from the top-level resync-php directory.
 
@@ -12,7 +12,8 @@ not be deployed in a live server.
 
 Basic library methods:
 
- Discovery:
+ Discovery
+ ---------
  ```php
  $host = 'http://resync.library.cornell.edu/';
  $resyncdiscover = new ResyncDiscover($host);
