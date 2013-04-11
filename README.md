@@ -23,3 +23,16 @@ Basic library methods:
      echo ' - ' . $sitemap . "\n";
  }
  ```
+
+ Capability description
+ ----------------------
+ ```php
+ include('ResyncCapabilities.php');
+ $url = 'http://resync.library.cornell.edu/arxiv/capabilitylist.xml';
+ $resynccapabilities = new ResyncCapabilities($url);
+ $capabilities = $resynccapabilities->getCapabilities();
+ echo 'Capabilities of ' . $url . "\n";
+ foreach($capabilities as $capability => $type) {
+     echo ' - ' . $capability . ' (capability type: ' . $type . ')' . "\n";
+ }
+ ```
