@@ -15,6 +15,7 @@ Basic library methods:
  Discovery
  ---------
  ```php
+ include('ResyncDiscover.php');
  $host = 'http://resync.library.cornell.edu/';
  $resyncdiscover = new ResyncDiscover($host);
  $sitemaps = $resyncdiscover->getSitemaps();
