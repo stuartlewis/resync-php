@@ -58,13 +58,18 @@ class ResyncResourcelist {
     // $checksum = Whether to check file checksums (normally true)
     // $force = Whether to force the download of files, even if they haven't changed (normally false)
     // $pretend = Pretend to download files - useful for testing large syncs (normally false)
-    function baseline($directory, $lastrun, $clear = false, $checksum = true, $force = false, $pretend = false) {
+    function baseline($directory, $lastrun = '', $clear = false, $checksum = true, $force = false, $pretend = false) {
         // Start the timer
         $starttime = microtime(true);
 
         // First clear the directory?
         if ($clear) {
             rmdir_recursive($directory, false);
+        }
+
+        // Was a date given?
+        if ($lastrun == '') {
+            $lastrun = new DateTime("0000-01-01T01:00:00Z", new DateTimeZone("UTC"));
         }
 
         // Do we need to first process a sitemapindex?

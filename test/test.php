@@ -42,12 +42,11 @@
     if (true) {
         // Load a test resource list
         include 'ResyncResourcelist.php';
-        $resourcelist = new ResyncResourcelist('http://resync.library.cornell.edu/arxiv-q-bio/resourcelist.xml');
+        $resourcelist = new ResyncResourcelist('http://resync.library.cornell.edu/arxiv/resourcelist.xml');
         $resourcelist->enableDebug();
 
-        // Baseline download the list (as at 1st Jan 1970)
-        $date = new DateTime("1970-01-01T01:00:00Z", new DateTimeZone("UTC"));
-        $resourcelist->baseline($resync_test_savedir, $date, false);
+        // Baseline sync
+        $resourcelist->baseline($resync_test_savedir);
         echo $resourcelist->getDownloadedFileCount() . ' files downloaded, and ' .
              $resourcelist->getSkippedFileCount() . ' files skipped' . "\n";
         echo $resourcelist->getDownloadSize() . 'Kb downloaded in ' .
