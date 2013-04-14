@@ -18,7 +18,7 @@ Discovery
 include('ResyncDiscover.php');
 $resyncdiscover = new ResyncDiscover('http://resync.library.cornell.edu/');
 $sitemaps = $resyncdiscover->getSitemaps();
-echo $host . ' - There were ' . count($sitemaps) . ' sitemaps found:' . "\n";
+echo ' - There were ' . count($sitemaps) . ' sitemaps found:' . "\n";
 foreach ($sitemaps as $sitemap) {
     echo ' - ' . $sitemap . "\n";
 }
