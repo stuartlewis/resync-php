@@ -53,3 +53,20 @@ echo $resourcelist->getDownloadSize() . 'Kb downloaded in ' .
      $resourcelist->getDownloadDuration() . ' seconds (' .
     ($resourcelist->getDownloadSize() / $resourcelist->getDownloadDuration()) . ' Kb/s)' . "\n";
 ```
+
+Changelist processing
+---------------------
+```php
+include 'ResyncChangelist.php';
+$changelist = new ResyncChangelist('http://resync.library.cornell.edu/arxiv/changelist.xml');
+$changelist->enableDebug();
+$changelist->process($resync_test_savedir);
+echo ' - ' . $changelist->getCreatedCount() . ' files created' . "\n";
+echo ' - ' . $changelist->getUpdatedCount() . ' files updated' . "\n";
+echo ' - ' . $changelist->getDeletedCount() . ' files deleted' . "\n";
+echo $changelist->getDownloadedFileCount() . ' files downloaded, and ' .
+     $changelist->getSkippedFileCount() . ' files skipped' . "\n";
+echo $changelist->getDownloadSize() . 'Kb downloaded in ' .
+     $changelist->getDownloadDuration() . ' seconds (' .
+    ($changelist->getDownloadSize() / $changelist->getDownloadDuration()) . ' Kb/s)' . "\n";
+```
