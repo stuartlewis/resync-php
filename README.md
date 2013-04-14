@@ -59,8 +59,8 @@ Changelist processing
 ```php
 include 'ResyncChangelist.php';
 $changelist = new ResyncChangelist('http://resync.library.cornell.edu/arxiv/changelist.xml');
-$changelist->enableDebug();
-$changelist->process($resync_test_savedir);
+$changelist->enableDebug(); // Show progress
+$changelist->process('/resync');
 echo ' - ' . $changelist->getCreatedCount() . ' files created' . "\n";
 echo ' - ' . $changelist->getUpdatedCount() . ' files updated' . "\n";
 echo ' - ' . $changelist->getDeletedCount() . ' files deleted' . "\n";
