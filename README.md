@@ -16,8 +16,7 @@ Discovery
 ---------
 ```php
 include('ResyncDiscover.php');
-$host = 'http://resync.library.cornell.edu/';
-$resyncdiscover = new ResyncDiscover($host);
+$resyncdiscover = new ResyncDiscover('http://resync.library.cornell.edu/');
 $sitemaps = $resyncdiscover->getSitemaps();
 echo $host . ' - There were ' . count($sitemaps) . ' sitemaps found:' . "\n";
 foreach ($sitemaps as $sitemap) {
@@ -29,10 +28,9 @@ Capability description
 ----------------------
 ```php
 include('ResyncCapabilities.php');
-$url = 'http://resync.library.cornell.edu/arxiv/capabilitylist.xml';
-$resynccapabilities = new ResyncCapabilities($url);
+$resynccapabilities = new ResyncCapabilities('http://resync.library.cornell.edu/arxiv/capabilitylist.xml');
 $capabilities = $resynccapabilities->getCapabilities();
-echo 'Capabilities of ' . $url . "\n";
+echo 'Capabilities' . "\n";
 foreach($capabilities as $capability => $type) {
     echo ' - ' . $capability . ' (capability type: ' . $type . ')' . "\n";
 }
