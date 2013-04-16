@@ -26,10 +26,10 @@ include '../../config/resync-config.php';
     $date = new DateTime("1970-01-01T01:00:00Z", new DateTimeZone("UTC"));
     $resourcelist->baseline($resync_test_savedir, $date, false);
     echo $resourcelist->getDownloadedFileCount() . ' files downloaded, and ' .
-        $resourcelist->getSkippedFileCount() . ' files skipped' . "\n";
+        $resourcelist->getSkippedFileCount() . ' files skipped' . "<br />";
     echo $resourcelist->getDownloadSize() . 'Kb downloaded in ' .
         $resourcelist->getDownloadDuration() . ' seconds (' .
-        ($resourcelist->getDownloadSize() / $resourcelist->getDownloadDuration()) . ' Kb/s)' . "\n";
+        ($resourcelist->getDownloadSize() / $resourcelist->getDownloadDuration()) . ' Kb/s)' . "<br />";
 ?>
     </body>
 </html>
