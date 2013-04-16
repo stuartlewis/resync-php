@@ -22,6 +22,9 @@
             <form action="./baseline/" method="get">
                 <li><strong>Baseline sync:</strong> <input type="text" name="url" size="80" value="http://resync.library.cornell.edu/arxiv-q-bio/resourcelist.xml"/><input type="submit" /></li>
             </form>
+            <form action="./changelist/" method="get">
+                <li><strong>Process changes:</strong> <input type="text" name="url" size="80" value="http://resync.library.cornell.edu/arxiv/changelist.xml"/><input type="submit" /></li>
+            </form>
         </ul>
     </body>
 </html>
