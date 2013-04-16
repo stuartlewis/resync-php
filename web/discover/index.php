@@ -25,7 +25,13 @@ include '../../config/resync-config.php';
             $resynccapabilities = new ResyncCapabilities($sitemap);
             $capabilities = $resynccapabilities->getCapabilities();
             foreach($capabilities as $capability => $type) {?>
-                <li><a href='<?=$capability?>'><?=$capability?></a> (capability type: <?=$type?>)</li><?php
+                <li><a href='<?=$capability?>'><?=$capability?></a> (capability type: <?=$type?><?php
+                    if ($type == 'resourcelist') {
+                        ?> [<a href='../baseline/index.php?url=<?=$capability?>'>baseline sync</a>]<?php
+                    } else if ($type == 'changelist') {
+                        ?> [<a href='../changelist/index.php?url=<?=$capability?>'>update</a>]<?php
+                    }
+                ?>)</li><?php
             }
         ?></ul></li>
     <?php } ?>
