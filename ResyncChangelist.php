@@ -46,7 +46,15 @@ class ResyncChangelist {
         $this->url = $url;
         $xmllist = http_get($this->url);
         $xml = simplexml_load_string($xmllist);
-        $this->xml = $xml;
+
+        // Is this a sitemapindex (changelist-archive) or a urlset?
+        if ($xml->getName() == 'sitemapindex') {
+            $this->sitemap = true;
+            $this->sitemapxml = $xml;
+        } else {
+            $this->sitemap = false;
+            $this->xml = $xml;
+        }
     }
 
     // Process the change list
@@ -64,8 +72,57 @@ class ResyncChangelist {
             $lastrun = new DateTime("0000-01-01T01:00:00Z", new DateTimeZone("UTC"));
         }
 
+        // Do we need to first process a sitemapindex?
+        if ($this->sitemap) {
+            $this->processSitemapindex($this->sitemapxml, $directory, $lastrun, $checksum, $force, $pretend);
+        } else {
+            $this->processUrlset($directory, $lastrun, $checksum, $force, $pretend);
+        }
+
+        // End the timer
+        $endtime = microtime(true);
+        $this->downloadtimer = $endtime - $starttime;
+    }
+
+    private function processSitemapindex($sitemapxml, $directory, $lastrun, $checksum = true, $force = false, $pretend = false) {
+        // Namespace handling
+        $namespaces = $this->sitemapxml->getNameSpaces(true);
+        if (!isset($namespaces['sm'])) $sac_ns['sm'] = 'http://www.sitemaps.org/schemas/sitemap/0.9';
+        $sitemaps = $this->sitemapxml->children($namespaces['sm'])->sitemap;
+
+        // Sitemap counter
+        $total = count($sitemaps);
+        $count = 1;
+
+        // Iterate through each sitemap->loc
+        foreach($sitemaps as $sitemap) {
+            $this->debug('Processing sitemap (' . $count++ . ' of ' . $total . '): ' . $sitemap->loc);
+
+            $xmllist = http_get($sitemap->loc);
+            $xml = simplexml_load_string($xmllist);
+
+            // Is this a sitemapindex or a urlset?
+            if ($xml->getName() == 'sitemapindex') {
+                $this->processSitemapindex($xml, $directory, $lastrun, $checksum, $force, $pretend);
+            } else {
+                $this->xml = $xml;
+                $this->processUrlset($directory, $lastrun, $checksum, $force, $pretend);
+            }
+        }
+    }
+
+    private function processUrlset($directory, $lastrun, $checksum = true, $force = false, $pretend = false) {
+        // Namespace handling
+        $namespaces = $this->xml->getNameSpaces(true);
+        if (!isset($namespaces['sm'])) $sac_ns['sm'] = 'http://www.sitemaps.org/schemas/sitemap/0.9';
+        $urls = $this->xml->children($namespaces['sm'])->url;
+
+        // File counter
+        $total = count($urls);
+        $count = 1;
+
         // Iterate through each url
-        foreach($this->xml->url as $url) {
+        foreach($urls as $url) {
             $namespaces = $url->getNameSpaces(true);
             $rs = $url->children($namespaces['rs']);
             $changetype = (string)$rs->md[0]->attributes()->change;
@@ -164,10 +221,6 @@ class ResyncChangelist {
 
             $this->urls[(string)$url->loc] = $changetype;
         }
-
-        // End the timer
-        $endtime = microtime(true);
-        $this->downloadtimer = $endtime - $starttime;
     }
 
     // Return the number of created files
