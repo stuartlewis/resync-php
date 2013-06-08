@@ -32,6 +32,9 @@ class ResyncResourcelist {
     // How large the downloads were (in kilobytes)
     private $downloadsize = 0;
 
+    // The callback function to run after each download
+    private $callback;
+
     // Whether or not to display debug information
     private $debug = false;
 
@@ -52,6 +55,11 @@ class ResyncResourcelist {
             $this->sitemap = false;
             $this->xml = $xml;
         }
+    }
+
+    // Register a callback function for each URL downloaded
+    public function registerCallback($callback) {
+        $this->callback = $callback;
     }
 
     // Baseline sync (download everything)
@@ -198,6 +206,11 @@ class ResyncResourcelist {
                 } else {
                     echo '  - ERROR MD5 mismatch: Expected:' . $cksum . ' Actual:' . $md5 . "\n";
                 }
+            }
+
+            // Run the callback method
+            if (!empty($this->callback)) {
+                call_user_func($this->callback, $build);
             }
         }
     }

@@ -42,7 +42,10 @@
     if (true) {
         // Load a test resource list
         include 'ResyncResourcelist.php';
-        $resourcelist = new ResyncResourcelist('http://resync.library.cornell.edu/arxiv/resourcelist.xml');
+        $resourcelist = new ResyncResourcelist('http://resync.library.cornell.edu/arxiv-q-bio/resourcelist.xml');
+        $resourcelist->registerCallback(function($file) {
+           echo '  - Callback given value of ' .$file . "\n";
+        });
         $resourcelist->enableDebug();
         $resourcelist->baseline($resync_test_savedir);
         echo $resourcelist->getDownloadedFileCount() . ' files downloaded, and ' .
@@ -55,7 +58,16 @@
     if (true) {
         // Process a changelist
         include 'ResyncChangelist.php';
-        $changelist = new ResyncChangelist('http://resync.library.cornell.edu/arxiv/changelist.xml');
+        $changelist = new ResyncChangelist('http://resync.library.cornell.edu/arxiv-all/changelist.xml');
+        $changelist->registerCreateCallback(function($file) {
+            echo '  - CREATE Callback given value of ' .$file . "\n";
+        });
+        $changelist->registerUpdateCallback(function($file) {
+            echo '  - UPDATE Callback given value of ' .$file . "\n";
+        });
+        $changelist->registerDeleteCallback(function($file) {
+            echo '  - DELETE Callback given value of ' .$file . "\n";
+        });
         $changelist->enableDebug();
         $changelist->process($resync_test_savedir);
         echo ' - ' . $changelist->getCreatedCount() . ' files created' . "\n";
@@ -66,5 +78,6 @@
         echo $changelist->getDownloadSize() . 'Kb downloaded in ' .
              $changelist->getDownloadDuration() . ' seconds (' .
             ($changelist->getDownloadSize() / $changelist->getDownloadDuration()) . ' Kb/s)' . "\n";
+        //print_r($changelist->getURLs());
     }
 ?>

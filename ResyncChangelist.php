@@ -35,6 +35,15 @@ class ResyncChangelist {
     // How large the downloads were (in kilobytes)
     private $downloadsize = 0;
 
+    // The callback function to run after each download
+    private $createcallback;
+
+    // The callback function to run after each download
+    private $updatecallback;
+
+    // The callback function to run after each download
+    private $deletecallback;
+
     // Whether or not to display debug information
     private $debug = false;
 
@@ -55,6 +64,21 @@ class ResyncChangelist {
             $this->sitemap = false;
             $this->xml = $xml;
         }
+    }
+
+    // Register a callback function for each URL downloaded
+    public function registerCreateCallback($callback) {
+        $this->createcallback = $callback;
+    }
+
+    // Register a callback function for each URL downloaded
+    public function registerUpdateCallback($callback) {
+        $this->updatecallback = $callback;
+    }
+
+    // Register a callback function for each URL downloaded
+    public function registerDeleteCallback($callback) {
+        $this->deletecallback = $callback;
     }
 
     // Process the change list
@@ -199,8 +223,18 @@ class ResyncChangelist {
 
                 if ($changetype == 'created') {
                     $this->createdcount++;
+
+                    // Run the callback method
+                    if (!empty($this->createcallback)) {
+                        call_user_func($this->createcallback, $build);
+                    }
                 } else {
                     $this->updatedcount++;
+
+                    // Run the callback method
+                    if (!empty($this->updatecallback)) {
+                        call_user_func($this->updatecallback, $build);
+                    }
                 }
             } else if ($changetype == 'deleted') {
                 // Create the directory if required
@@ -217,6 +251,11 @@ class ResyncChangelist {
                     echo ' - File does not exist!' . "\n";
                 }
                 $this->deletedcount++;
+
+                // Run the callback method
+                if (!empty($this->deletecallback)) {
+                    call_user_func($this->deletecallback, $build);
+                }
             }
 
             $this->urls[(string)$url->loc] = $changetype;
