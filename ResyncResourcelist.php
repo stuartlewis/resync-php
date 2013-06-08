@@ -17,6 +17,9 @@ class ResyncResourcelist {
     // Is the top level file a sitemapindex or urlset
     private $sitemap = false;
 
+    // URLs of files processed
+    private $urls;
+
     // How many files downloaded
     private $downloadcount = 0;
 
@@ -66,6 +69,7 @@ class ResyncResourcelist {
         if ($clear) {
             rmdir_recursive($directory, false);
         }
+        $this->urls = array();
 
         // Was a date given?
         if ($lastrun == '') {
@@ -128,7 +132,6 @@ class ResyncResourcelist {
             $build .= '/' . $parts[count($parts) - 1];
 
             // Unencode the checksum
-            $namespaces = $url->getNameSpaces(true);
             $rs = $url->children($namespaces['rs']);
             $hash = (string)$rs->md[0]->attributes()->hash;
             $algorithm = substr($hash, 0, strpos($hash, ':'));
@@ -166,6 +169,7 @@ class ResyncResourcelist {
                     $this->debug('  - PRETEND mode: not really downloading file');
                 }
                 $this->downloadcount++;
+                $this->urls[(string)$url->loc] = "created";
             } else if ($exists) {
 
             } else {
@@ -205,6 +209,11 @@ class ResyncResourcelist {
     // Return the total download duration
     function getDownloadDuration() {
         return $this->downloadtimer;
+    }
+
+    // Return the URLs processed
+    function getURLs() {
+        return $this->urls;
     }
 
     // Whether to display debug messages or not
