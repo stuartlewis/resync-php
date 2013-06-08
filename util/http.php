@@ -5,11 +5,15 @@
     // Whether curl can be used
     $allow_curl = function_exists('curl_init');
 
+    // Enable curl debugging
+    $curldebug = false;
+
     function http_get($url) {
-        global $allow_curl, $resync_delay;
+        global $allow_curl, $resync_delay, $curldebug;
         sleep($resync_delay);
         if ($allow_curl) {
             $ch = curl_init($url);
+            if ($curldebug) curl_setopt($ch, CURLOPT_VERBOSE, true);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             $data = curl_exec($ch);
             curl_close($ch);
@@ -20,11 +24,12 @@
     }
 
     function http_get_save($url, $filename) {
-        global $allow_curl, $resync_delay;
+        global $allow_curl, $resync_delay, $curldebug;
         sleep($resync_delay);
         if ($allow_curl) {
             $fp = fopen($filename, 'w');
             $ch = curl_init($url);
+            if ($curldebug) curl_setopt($ch, CURLOPT_VERBOSE, true);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             curl_setopt($ch, CURLOPT_FILE, $fp);
             $data = curl_exec($ch);
