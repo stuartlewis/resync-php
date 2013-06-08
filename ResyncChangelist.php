@@ -26,6 +26,9 @@ class ResyncChangelist {
     // How many files skipped
     private $skipcount = 0;
 
+    // URLs of files processed
+    private $urls;
+
     // How long the downloads took (in seconds)
     private $downloadtimer = 0;
 
@@ -54,6 +57,7 @@ class ResyncChangelist {
         // File counter
         $total = count($this->xml->url);
         $count = 1;
+        $this->urls = array();
 
         // Was a date given?
         if ($lastrun == '') {
@@ -157,6 +161,8 @@ class ResyncChangelist {
                 }
                 $this->deletedcount++;
             }
+
+            $this->urls[(string)$url->loc] = $changetype;
         }
 
         // End the timer
@@ -197,6 +203,11 @@ class ResyncChangelist {
     // Return the total download duration
     function getDownloadDuration() {
         return $this->downloadtimer;
+    }
+
+    // Return the URLs processed
+    function getURLs() {
+        return $this->urls;
     }
 
     // Whether to display debug messages or not
