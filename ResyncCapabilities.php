@@ -26,9 +26,11 @@ class ResyncCapabilities {
         $this->url = $url;
         $xmllist = http_get($this->url);
         $this->xml = simplexml_load_string($xmllist);
-        foreach ($this->xml->url as $entry) {
+        $namespaces = $this->xml->getNameSpaces(true);
+        if (!isset($namespaces['sm'])) $sac_ns['sm'] = 'http://www.sitemaps.org/schemas/sitemap/0.9';
+        $entries = $this->xml->children($namespaces['sm'])->url;
+        foreach ($entries as $entry) {
             $loc = (String)$entry->loc;
-            $namespaces = $entry->getNameSpaces(true);
             $rs = $entry->children($namespaces['rs']);
             $capability = (string)$rs->md[0]->attributes()->capability;
             $capabilities[$loc] = $capability;
