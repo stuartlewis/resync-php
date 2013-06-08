@@ -111,12 +111,17 @@ class ResyncResourcelist {
     }
 
     private function processUrlset($directory, $lastrun, $checksum = true, $force = false, $pretend = false) {
+        // Namespace handling
+        $namespaces = $this->xml->getNameSpaces(true);
+        if (!isset($namespaces['sm'])) $sac_ns['sm'] = 'http://www.sitemaps.org/schemas/sitemap/0.9';
+        $urls = $this->xml->children($namespaces['sm'])->url;
+
         // File counter
-        $total = count($this->xml->url);
+        $total = count($urls);
         $count = 1;
 
         // Iterate through each url
-        foreach($this->xml->url as $url) {
+        foreach($urls as $url) {
             $this->debug('Processing file (' . $count++ . ' of ' . $total . '): ' . $url->loc);
 
             // Create the directory if required
@@ -134,12 +139,18 @@ class ResyncResourcelist {
             // Unencode the checksum
             $rs = $url->children($namespaces['rs']);
             $hash = (string)$rs->md[0]->attributes()->hash;
-            $algorithm = substr($hash, 0, strpos($hash, ':'));
-            $cksum = substr($hash, strpos($hash, ':') + 1, (strlen($hash) - strlen($algorithm) - 1));
+            $hashexists = true;
+            if (!empty($hash)) {
+                $algorithm = substr($hash, 0, strpos($hash, ':'));
+                $cksum = substr($hash, strpos($hash, ':') + 1, (strlen($hash) - strlen($algorithm) - 1));
+            } else {
+                $this->debug(' - Missing file hash!');
+                $hashexists = false;
+            }
 
             // Does the file exist already?
             $exists = false;
-            if (file_exists($build) && (! $force) && (! $pretend)) {
+            if (file_exists($build) && (! $force) && (! $pretend) && ($hashexists)) {
                 // Does the checksum match?  If so, we can skip the download later
                 $md5 = base64_encode(md5_file($build, true));
                 $this->debug(' - File already exists, check the checksum:');
@@ -179,7 +190,7 @@ class ResyncResourcelist {
             }
 
             // Checksum the file?
-            if (($checksum) && (!$exists) && (! $pretend)) {
+            if (($checksum) && (!$exists) && (! $pretend) && $hashexists) {
                 $md5 = base64_encode(md5_file($build, true));
                 $this->debug(' - Checking checksum: ' . $algorithm . ' with value of ' . $cksum);
                 if ($md5 == $cksum) {
