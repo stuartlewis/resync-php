@@ -17,7 +17,10 @@
         <h2>Perform operations:</h2>
         <ul>
             <form action="./discover/" method="get">
-                <li><strong>Discover capabilities:</strong> <input type="text" name="url" size="80" value="http://resync.library.cornell.edu/"/><input type="submit" /></li>
+                <li><strong>Discover ResourceSync endpoints:</strong> <input type="text" name="url" size="80" value="http://resync.library.cornell.edu/"/><input type="submit" /></li>
+            </form>
+            <form action="./capabilities/" method="get">
+                <li><strong>Examine capabilities:</strong> <input type="text" name="url" size="80" value="http://resync.library.cornell.edu/arxiv-all/capabilitylist.xml"/><input type="submit" /></li>
             </form>
             <form action="./baseline/" method="get">
                 <li><strong>Baseline sync:</strong> <input type="text" name="url" size="80" value="http://resync.library.cornell.edu/arxiv-q-bio/resourcelist.xml"/><input type="submit" /></li>
