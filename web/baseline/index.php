@@ -5,8 +5,12 @@ include '../../config/resync-config.php';
 ?><html>
     <head>
         <title>ResourceSync web test</title>
+
+        <link rel="shortcut icon" href="../../assets/favicon.ico" type="image/x-icon"/>
+        <link rel="stylesheet" href="../../assets/resourcesync.css" type="text/css"/>
     </head>
     <body>
+    <img alt="ReSync logo" src="../../assets/resync_logo.jpg"/>
     <h1>ResourceSync PHP Client Library</h1>
 
 <?php
