@@ -1,5 +1,7 @@
 ResourceSync PHP Client Library
 ===============================
+![alt text](https://raw.github.com/stuartlewis/resync-php/master/assets/resync_logo.jpg "ResourceSync logo")
+
 ResourceSync PHP Client Library
 * http://www.openarchives.org/rs/
 
