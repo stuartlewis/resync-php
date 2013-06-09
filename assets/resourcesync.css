@@ -1,0 +1,998 @@
+/* Style for OAI specification */
+
+/* Based on W3C
+   Style for a "Proposed Recommendation"
+   Copyright 1997-2003 W3C (MIT, ERCIM, Keio). All Rights Reserved.
+   The following software licensing rules apply:
+   http://www.w3.org/Consortium/Legal/copyright-software
+   Obtained from
+   http://www.w3.org/StyleSheets/TR/W3C-PR.css
+   which was marked with Id
+   [dollar]Id: base.css,v 1.25 2006/04/18 08:42:53 bbos Exp [dollar]
+*/
+
+/* Subsequent changes
+   2007-09-21 thru 2007-10-15 for OAI-ORE alpha release [Simeon Warner]
+   2012-08-13 for ResourceSync [Simeon Warner, Martin Kline]
+   2013-05-06 beta draft ResourceSync [Simeon Warner, Martin Kline]
+   $Id: resourcesync.css,v 1.2 2013-06-06 23:05:09 simeon Exp $ */
+
+body {
+    padding: 2em 1em 2em 70px;
+    margin: 0;
+    font-family: sans-serif;
+    color: #000000;
+    background: white;
+    background-position: top left;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    font-size: medium;
+    line-height: 110%;
+}
+
+:link {
+    color: #00C;
+    background: transparent;
+}
+:visited { color: #609; background: transparent }
+a:active { color: #C00; background: transparent }
+
+dfn { font-style: italic; font-weight: bold }
+
+a:visited img { border-style: none }
+
+a:link img { border-style: none } /* no border on img links */
+
+a img { color: white; }    /* trick to hide the border in Netscape 4 */
+@media all {          /* hide the next rule from Netscape 4 */
+    a img { color: inherit; }  /* undo the color change above */
+}
+
+td { /* ns 4 */
+    font-family: sans-serif;
+}
+
+th { /* ns 4 */
+    font-family: sans-serif;
+}
+
+h6 { text-align: left }
+
+h5 { text-align: left }
+
+h4 { text-align: left }
+
+h3 { text-align: left }
+
+h2 { text-align: left }
+
+h1 { text-align: left }
+/* background should be transparent, but WebTV has a bug */
+h5 { color: #005A9C; background: white }
+h4 { color: #005A9C; background: white }
+h3 { color: #005A9C; background: white }
+h2 { color: #005A9C; background: white }
+h1 { color: #005A9C; background: white }
+h1 { font: 170% sans-serif }
+h2 { font: 140% sans-serif }
+h3 { font: 120% sans-serif }
+h4 { font: italic 110% sans-serif }
+h5 { font: italic 100% sans-serif }
+h6 { font: small-caps 80% sans-serif }
+
+.hide { display: none }
+
+div.image{
+    align: center;
+    text-align: center;
+}
+
+div.head {
+    margin-bottom: 1em;
+    margin: 0 0 0 0;
+}
+div.head h1 {
+    margin-top: 1em;
+    clear: both;
+}
+div.head table {
+    margin-left: 2em;
+    margin-top: 2em
+}
+
+p.copyright { font-size: small }
+p.copyright small { font-size: small }
+
+@media screen { /* hide from IE3 */
+    a[href]:hover { background: #ffa }
+}
+
+pre { margin-left: 2em }
+/*
+p {
+ margin-top: 0.6em;
+ margin-bottom: 0.6em;
+}
+*/
+dd { margin-top: 0; margin-bottom: 0 }
+dt { margin-top: 0; margin-bottom: 0 } /* opera 3.50 */
+dt { font-weight: bold }
+
+code { font-family: monospace }
+
+pre { font-family: monospace } /* navigator 4 requires this */
+
+ol.toc {
+    list-style: disc;  /* Mac NS has problem with 'none' */
+    list-style: none;
+}
+
+ul.toc {
+    list-style: disc;  /* Mac NS has problem with 'none' */
+    list-style: none;
+}
+
+@media aural {
+    h3 { stress: 20; richness: 90 }
+    h2 { stress: 20; richness: 90 }
+    h1 { stress: 20; richness: 90 }
+    .hide { speak: none }
+    p.copyright { volume: x-soft; speech-rate: x-fast }
+    dt { pause-before: 20% }
+    pre { speak-punctuation: code }
+}
+
+/* ====================== ORE STYLES ========================= */
+
+/* Styles for OAI-ORE logo and header text */
+.ORElogo-name {
+    vertical-align: top;
+}
+.OREtext {
+    font-size: 175%;
+    font-weight: 400;
+    vertical-align: top;
+    line-height: 120%;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+.OAIlogo {
+    float: left;
+    margin-top: 6px;
+    margin-right: 12px;
+}
+/* pad to 70 pixels high from 56 = 7 top and bottom */
+.ORElogo {
+    float: left;
+    margin-top: 13px;
+    margin-bottom: 7px;
+    margin-left: 12px;
+    margin-right: 20px;
+}
+#ore-logo {
+    width: 100px;
+    height: 100px;
+    float: none;
+    clear: none;
+}
+table.layout {
+    empty-cells: show;
+    border-collapse: collapse;
+}
+table.layout td {
+    border: none;
+}
+
+
+/* ORE documents title block under header */
+.titleBlock {
+    clear: both;
+}
+.title {
+    font-size: x-large;
+    font-weight: 500;
+    margin-bottom: 0ex;
+}
+.subTitle {
+    font-size: medium;
+    font-weight: 300;
+    margin-top: 0.2ex;
+}
+
+
+code {
+    font-family: monospace;
+}
+
+div.constraint, div.issue, div.note, div.notice {
+    margin-left: 2em;
+}
+dt.label {
+    display: run-in;
+}
+.diff-chg {
+    background-color: yellow;
+}
+.diff-del {
+    background-color: red;
+    text-decoration: line-through;
+}
+.diff-add {
+    background-color: lime;
+}
+dl.EditorsContributors dd dt {
+    font-weight: 600;
+    font-style: italic;
+}
+
+.code {
+    font-family: monospace;
+    font-size: small;
+}
+dfn {
+    font-style: italic;
+    font-weight: bold;
+}
+ol.enumar {
+    list-style-type: decimal;
+}
+ol.enumla {
+    list-style-type: lower-alpha;
+}
+ol.enumlr {
+    list-style-type: lower-roman;
+}
+ol.enumua {
+    list-style-type: upper-alpha;
+}
+ol.enumur {
+    list-style-type: upper-roman;
+}
+dt.label {
+    display: run-in;
+}
+li, p {
+    margin-top: 0.3em;
+    margin-bottom: 0.8em;
+}
+.diff-chg {
+    background-color: yellow;
+}
+.diff-del {
+    background-color: red;
+    text-decoration: line-through;
+}
+.diff-add {
+    background-color: lime;
+}
+
+/* Default table layout */
+table {
+    empty-cells: show;
+    border-collapse: collapse;
+    margin-bottom: .5ex;
+}
+table caption {
+    font-weight: normal;
+    font-style: italic;
+    text-align: left;
+    margin-top: 1.5ex;
+    margin-bottom: .5ex;
+}
+table th {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+}
+table td {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+}
+
+
+.rfc2119 {
+    font-variant: small-caps;
+}
+div.exampleOuter {
+    border: 4px double gray;
+    margin: 0em;
+    padding: 0em;
+}
+div.exampleInner {
+    background-color: #d5dee3;
+    border-top-width: 4px;
+    border-top-style: double;
+    border-top-color: #d3d3d3;
+    border-bottom-width: 4px;
+    border-bottom-style: double;
+    border-bottom-color: #d3d3d3;
+    padding: 4px;
+    margin: 0em;
+}
+div.exampleInner pre {
+    margin: 0em;
+    padding-left: 1em;
+}
+div.exampleInner pre.request {
+    margin: 0em;
+    padding-left: 1em;
+    background-color: #e5eef3;
+}
+div.exampleInner pre.response {
+    margin: 0em;
+    padding-left: 1em;
+    padding-top: 2ex;
+}
+div.exampleInnerDisco {
+    /*background-color: #d5dee3;*/
+    /*background-color: #d5deff;*/
+    background-color: #ffffcc;
+    border-top-width: 4px;
+    border-top-style: double;
+    border-top-color: #d3d3d3;
+    border-bottom-width: 4px;
+    border-bottom-style: double;
+    border-bottom-color: #d3d3d3;
+    padding: 4px;
+    margin: 0em;
+}
+div.exampleInnerDisco pre {
+    margin: 0em;
+    padding-left: 1em;
+}
+div.exampleInnerDisco pre.request {
+    margin: 0em;
+    padding-left: 1em;
+    background-color: #e5eef3;
+}
+div.exampleInnerDisco pre.response {
+    margin: 0em;
+    padding-left: 1em;
+    padding-top: 2ex;
+}
+div.exampleWrapper {
+    margin: 4px;
+}
+div.exampleHeader {
+    font-weight: bold;
+    margin: 4px;
+}
+.style1 {
+    color: #0000CC;
+}
+.figure {
+    font-weight: bold;
+    text-align: center;
+}
+.definition {
+    font-weight: bold;
+    font-style: italic;
+}
+.style2 {
+    text-align: center;
+}
+.squeezeList {
+    list-style-type: square;
+    line-height: 80%;
+    font-size: 90%;
+}
+p.toc {
+    line-height: 120%;
+}
+
+/* namespace table layout */
+table.namespace-table {
+    empty-cells: show;
+    border-collapse: collapse;
+    margin-bottom: .5ex;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+table.namespace-table caption {
+    font-weight: normal;
+    font-style: italic;
+    text-align: left;
+    margin-top: 1.5ex;
+    margin-bottom: .5ex;
+}
+table.namespace-table th.desc {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 80%;
+}
+table.namespace-table th {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 20%;
+}
+table.namespace-table tr.top {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #aaaaaa;
+}
+table.namespace-table tr.odd {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #cccccc;
+}
+table.namespace-table tr.even {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #eeeeee;
+}
+table.namespace-table td.scap {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    width: 35%;
+    vertical-align: top;
+}
+table.namespace-table td.sync {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: center;
+    width: 25%;
+}
+table.namespace-table td.audit {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: center;
+    width: 15%;
+}
+
+/* capability table layout */
+table.capability-table {
+    empty-cells: show;
+    border-collapse: collapse;
+    margin-bottom: .5ex;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+table.capability-table caption {
+    font-weight: normal;
+    font-style: italic;
+    text-align: left;
+    margin-top: 1.5ex;
+    margin-bottom: .5ex;
+}
+table.capability-table th.desc {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 80%;
+}
+table.capability-table th {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 20%;
+}
+table.capability-table tr.top {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #aaaaaa;
+}
+table.capability-table tr.odd {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #cccccc;
+}
+table.capability-table tr.even {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #eeeeee;
+}
+table.capability-table td.scap {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    width: 35%;
+    vertical-align: top;
+}
+table.capability-table td.sync {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: center;
+    width: 25%;
+}
+table.capability-table td.audit {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: center;
+    width: 15%;
+}
+
+/* rel type table layout */
+table.rel_types-table {
+    empty-cells: show;
+    border-collapse: collapse;
+    margin-bottom: .5ex;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+table.rel_types-table caption {
+    font-weight: normal;
+    font-style: italic;
+    text-align: left;
+    margin-top: 1.5ex;
+    margin-bottom: .5ex;
+}
+table.rel_types-table th.rel {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 60%;
+}
+table.rel_types-table th.spec {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 20%;
+}
+table.rel_types-table th.ex {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 20%;
+}
+table.rel_types-table tr.top {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #aaaaaa;
+}
+table.rel_types-table tr.top1 {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #cccccc;
+}
+table.rel_types-table tr.odd {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #ffffff;
+}
+table.rel_types-table tr.even {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #eeeeee;
+}
+table.rel_types-table td.rel {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    width: 60%;
+}
+table.rel_types-table td.spec{
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: center;
+    width: 20%;
+}
+table.rel_types-table td.ex {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    width: 20%;
+}
+
+/* elements table layout */
+table.elements-table {
+    empty-cells: show;
+    border-collapse: collapse;
+    margin-bottom: .5ex;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+table.elements-table caption {
+    font-weight: normal;
+    font-style: italic;
+    text-align: left;
+    margin-top: 1.5ex;
+    margin-bottom: .5ex;
+}
+table.elemements-table th{
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 30%;
+}
+table.elemements-table th.left {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 20%;
+}
+table.elements-table th.cap {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 60%;
+}
+table.elements-table th.sec {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 30%;
+}
+table.elements-table th {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 50%;
+}
+table.elements-table tr.top {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #aaaaaa;
+}
+table.elements-table tr.top1 {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #cccccc;
+}
+table.elements-table tr.odd {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #ffffff;
+}
+table.elements-table tr.even {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #eeeeee;
+}
+table.elements-table td {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    width: 30%;
+    vertical-align: top;
+}
+table.elements-table td.left{
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    width: 40%;
+}
+table.elements-table td.sec {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    width: 40%;
+}
+
+/* elements overview table layout */
+table.elem_overview-table {
+    empty-cells: show;
+    border-collapse: collapse;
+    margin-bottom: .5ex;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+table.elem_overview-table caption {
+    font-weight: normal;
+    font-style: italic;
+    text-align: left;
+    margin-top: 1.5ex;
+    margin-bottom: .5ex;
+}
+table.elem_overview-table th {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 20%;
+}
+table.elem_overview-table tr.top {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #aaaaaa;
+}
+table.elem_overview-table tr.odd {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #cccccc;
+}
+table.elem_overview-table tr.even {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #eeeeee;
+}
+table.elem_overview-table td {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 20%;
+    vertical-align: top;
+}
+table.elem_overview-table td.left{
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    font-weight: normal;
+    width: 20%;
+}
+table.elem_overview-table td.opt{
+    padding: 5px;
+    border: 2px solid #000000;
+    width: 20%;
+    background-color: #99cc33;
+    vertical-align: middle;
+}
+table.elem_overview-table td.req{
+    padding: 5px;
+    border: 2px solid #000000;
+    width: 20%;
+    background-color: #ff6633;
+    vertical-align: middle;
+}
+
+/* elements overview table layout */
+table.elem_intro-table {
+    empty-cells: show;
+    border-collapse: collapse;
+    margin-bottom: .5ex;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+table.elem_intro-table caption {
+    font-weight: normal;
+    font-style: italic;
+    text-align: left;
+    margin-top: 1.5ex;
+    margin-bottom: .5ex;
+}
+table.elem_intro-table th.left {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 40%;
+}
+table.elem_intro-table th {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    width: 20%;
+}
+table.elem_intro-table tr.top {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #aaaaaa;
+}
+table.elem_intro-table tr.top1 {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #cccccc;
+}
+table.elem_intro-table tr.odd {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #ffffff;
+}
+table.elem_intro-table tr.even {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    background-color: #eeeeee;
+}
+table.elem_intro-table td {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: center;
+    width: 20%;
+    vertical-align: top;
+}
+table.elem_intro-table td.left{
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    font-weight: normal;
+    width: 40%;
+}
+
+
+/* We have a namespace table in many docs so define standard style. To
+   use this just put <table class="namespace-table"...> then use
+   <th> and <td> as normal */
+table.namespace-table {
+    margin-left: auto;
+    margin-right: auto;
+    empty-cells: show;
+    border-collapse: collapse;
+}
+table.namespace-table th {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+}
+table.elem_intro-table th.left {
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+    width: 10%;
+}
+table.elem_intro-table th.center{
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+    width: 10%;
+}
+table.elem_intro-table th.right{
+    padding: 3px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+    width: 10%;
+}
+table.namespace-table td {
+    padding: 2px;
+    border: 2px solid #000000;
+    text-align: left;
+}
+table#namespace-table caption {
+    font-weight: normal;
+    font-style: italic;
+    text-align: left;
+    margin-bottom: .5ex;
+}
+table.namespace-table td.left{
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    font-weight: normal;
+    width: 10%;
+}
+table.namespace-table td.center{
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    font-weight: normal;
+    width: 45%;
+}
+table.namespace-table td.right{
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+    font-weight: normal;
+    width: 45%;
+}
+
+/* div for link to ReM at foot of documents */
+div#rem {
+    margin-top: 4ex;
+}
+
+/* div for license information at foot of documents */
+div#license {
+    margin-top: 4ex;
+}
+
+/* div to create a big space */
+div#bigspace {
+    margin-top: 15ex;
+}
+
+/* Styling foc change log tables at end of each document */
+table.changelog {
+    empty-cells: show;
+    border-collapse: collapse;
+}
+table.changelog th {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: center;
+    font-weight: bold;
+}
+table.changelog td {
+    padding: 5px;
+    border: 2px solid #000000;
+    text-align: left;
+}
+div#alpha-warning {
+    font-style: italic;
+    font-weight: bold;
+    color: #FF0000;
+    border-top-width: thin;
+    border-right-width: thin;
+    border-bottom-width: thin;
+    border-left-width: thin;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    padding: 0.5ex;
+}
+.rsdisco {
+    color: #0033ff;
+    font-weight: bold;
+}
+.bs {
+    color: #0000ff;
+    font-weight: bold;
+}
+.rs {
+    color: #e00000;
+    font-weight: bold;
+}
+p.caption {
+    text-align: center;
+    margin-bottom: 3ex;
+}
+p.todo {
+    margin-top: 2ex;
+    color: #FF0000;
+}
+p.todo:before {
+    font-weight: bold;
+    content: "TODO: ";
+}
+div#float-warning {
+    position: fixed;
+    top: 10px;
+    left: 100px;
+    border-top-width: thin;
+    border-right-width: thin;
+    border-bottom-width: thin;
+    border-left-width: thin;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    padding: 0.5ex;
+    font-size: 130%;
+    font-style: italic;
+    font-weight: bold;
+    line-height: 130%;
+    color: #F00;
+    background-color: #FFF;
+}
