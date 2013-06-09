@@ -54,6 +54,13 @@ echo $resourcelist->getDownloadSize() . 'Kb downloaded in ' .
     ($resourcelist->getDownloadSize() / $resourcelist->getDownloadDuration()) . ' Kb/s)' . "\n";
 ```
 
+To baseline from a given date, use:
+
+```php
+$from = new DateTime("2013-05-18 00:00:00.000000");
+$resourcelist->baseline('/resync', $from);
+```
+
 Changelist processing
 ---------------------
 ```php
@@ -69,4 +76,11 @@ echo $changelist->getDownloadedFileCount() . ' files downloaded, and ' .
 echo $changelist->getDownloadSize() . 'Kb downloaded in ' .
      $changelist->getDownloadDuration() . ' seconds (' .
     ($changelist->getDownloadSize() / $changelist->getDownloadDuration()) . ' Kb/s)' . "\n";
+```
+
+To process changes from a given date, use:
+
+```php
+$from = new DateTime("2013-05-18 00:00:00.000000");
+$changelist->process('/resync', $from);
 ```
