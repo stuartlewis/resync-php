@@ -64,12 +64,12 @@ class ResyncResourcelist {
 
     // Baseline sync (download everything)
     // $directory = Where to store the files
-    // $lastrun = Date of last run
+    // $from = Date of last run
     // $clear = Whether to remove all files before running (normally false)
     // $checksum = Whether to check file checksums (normally true)
     // $force = Whether to force the download of files, even if they haven't changed (normally false)
     // $pretend = Pretend to download files - useful for testing large syncs (normally false)
-    function baseline($directory, $lastrun = '', $clear = false, $checksum = true, $force = false, $pretend = false) {
+    function baseline($directory, $from = '', $clear = false, $checksum = true, $force = false, $pretend = false) {
         // Start the timer
         $starttime = microtime(true);
 
@@ -80,15 +80,15 @@ class ResyncResourcelist {
         $this->urls = array();
 
         // Was a date given?
-        if ($lastrun == '') {
-            $lastrun = new DateTime("0000-01-01T01:00:00Z", new DateTimeZone("UTC"));
+        if ($from == '') {
+            $from = new DateTime("0000-01-01T01:00:00Z", new DateTimeZone("UTC"));
         }
 
         // Do we need to first process a sitemapindex?
         if ($this->sitemap) {
-            $this->processSitemapindex($this->sitemapxml, $directory, $lastrun, $checksum, $force, $pretend);
+            $this->processSitemapindex($this->sitemapxml, $directory, $from, $checksum, $force, $pretend);
         } else {
-            $this->processUrlset($directory, $lastrun, $checksum, $force, $pretend);
+            $this->processUrlset($directory, $from, $checksum, $force, $pretend);
         }
 
         // End the timer
@@ -96,7 +96,7 @@ class ResyncResourcelist {
         $this->downloadtimer = $endtime - $starttime;
     }
 
-    private function processSitemapindex($sitemapxml, $directory, $lastrun, $checksum = true, $force = false, $pretend = false) {
+    private function processSitemapindex($sitemapxml, $directory, $from, $checksum = true, $force = false, $pretend = false) {
         // Sitemap counter
         $total = count($sitemapxml->sitemap);
         $count = 1;
@@ -110,15 +110,15 @@ class ResyncResourcelist {
 
             // Is this a sitemapindex or a urlset?
             if ($xml->getName() == 'sitemapindex') {
-                $this->processSitemapindex($xml, $directory, $lastrun, $checksum, $force, $pretend);
+                $this->processSitemapindex($xml, $directory, $from, $checksum, $force, $pretend);
             } else {
                 $this->xml = $xml;
-                $this->processUrlset($directory, $lastrun, $checksum, $force, $pretend);
+                $this->processUrlset($directory, $from, $checksum, $force, $pretend);
             }
         }
     }
 
-    private function processUrlset($directory, $lastrun, $checksum = true, $force = false, $pretend = false) {
+    private function processUrlset($directory, $from, $checksum = true, $force = false, $pretend = false) {
         // Namespace handling
         $namespaces = $this->xml->getNameSpaces(true);
         if (!isset($namespaces['sm'])) $sac_ns['sm'] = 'http://www.sitemaps.org/schemas/sitemap/0.9';
@@ -173,7 +173,7 @@ class ResyncResourcelist {
 
             // Check if file has been updated since last run?
             $lastmod = new DateTime($url->lastmod, new DateTimeZone("UTC"));
-            if (($lastmod > $lastrun) && (! $exists)) {
+            if (($lastmod > $from) && (! $exists)) {
                 $this->debug(' - Downloading file: ' . $build);
                 if (! $pretend) {
                     $start = microtime(true);
@@ -193,7 +193,7 @@ class ResyncResourcelist {
 
             } else {
                 $this->debug('  - Skipping! lastmod: ' . $lastmod->format('Y-m-d H:i:s') .
-                             ' is before last run: ' . $lastrun->format('Y-m-d H:i:s'));
+                             ' is before last run: ' . $from->format('Y-m-d H:i:s'));
                 $this->skipcount++;
             }
 
@@ -246,7 +246,7 @@ class ResyncResourcelist {
         $this->htmldebug = $html;
     }
 
-    // Display a debug mesage
+    // Display a debug message
     private function debug($message) {
         if ($this->debug) echo $message;
         if ($this->htmldebug) {
