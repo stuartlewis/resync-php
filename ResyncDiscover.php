@@ -59,7 +59,7 @@ class ResyncDiscover {
         $this->htmldebug = $html;
     }
 
-    // Display a debug mesage
+    // Display a debug message
     private function debug($message) {
         if ($this->debug) echo $message;
         if ($this->htmldebug) {
