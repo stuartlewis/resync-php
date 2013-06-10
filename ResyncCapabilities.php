@@ -57,12 +57,10 @@ class ResyncCapabilities {
 
     // Display a debug message
     private function debug($message) {
-        if ($this->debug) echo $message;
+        if ($this->debug) echo $message . "\n";
         if ($this->htmldebug) {
             echo "<br />\n";
             ob_flush();
-        } else {
-            echo "\n";
         }
     }
 }

@@ -211,7 +211,7 @@ class ResyncResourcelist {
 
             // Run the callback method
             if (!empty($this->callback)) {
-                call_user_func($this->callback, $build, new ResyncURL($url->loc, $url));
+                call_user_func($this->callback, $build, new ResyncURL($url->loc, $url, $build));
             }
         }
     }
@@ -249,13 +249,11 @@ class ResyncResourcelist {
 
     // Display a debug message
     private function debug($message) {
-        if ($this->debug) echo $message;
+        if ($this->debug) echo $message . "\n";
         if ($this->htmldebug) {
             echo "<br />\n";
             flush();
             ob_flush();
-        } else {
-            echo "\n";
         }
     }
 }

@@ -240,14 +240,14 @@ class ResyncChangelist {
 
                     // Run the callback method
                     if (!empty($this->createcallback)) {
-                        call_user_func($this->createcallback, $build, new ResyncURL($url->loc, $url));
+                        call_user_func($this->createcallback, $build, new ResyncURL($url->loc, $url, $build));
                     }
                 } else {
                     $this->updatedcount++;
 
                     // Run the callback method
                     if (!empty($this->updatecallback)) {
-                        call_user_func($this->updatecallback, $build, new ResyncURL($url->loc, $url));
+                        call_user_func($this->updatecallback, $build, new ResyncURL($url->loc, $url, $build));
                     }
                 }
             } else if ($changetype == 'deleted') {
@@ -268,7 +268,7 @@ class ResyncChangelist {
 
                 // Run the callback method
                 if (!empty($this->deletecallback)) {
-                    call_user_func($this->deletecallback, $build, new ResyncURL($url->loc, $url));
+                    call_user_func($this->deletecallback, $build, new ResyncURL($url->loc, $url, $build));
                 }
             }
 
@@ -324,13 +324,11 @@ class ResyncChangelist {
 
     // Display a debug message
     private function debug($message) {
-        if ($this->debug) echo $message;
+        if ($this->debug) echo $message . "\n";
         if ($this->htmldebug) {
             echo "<br />\n";
             flush();
             ob_flush();
-        } else {
-            echo "\n";
         }
     }
 }
