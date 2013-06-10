@@ -6,9 +6,12 @@ class ResyncURL {
 
     private $xml;
 
-    function __construct($loc, $xml) {
+    private $fileondisk;
+
+    function __construct($loc, $xml, $fileondisk) {
         $this->loc = $loc;
         $this->xml = $xml;
+        $this->fileondisk = $fileondisk;
     }
 
     function getLoc() {
@@ -17,6 +20,10 @@ class ResyncURL {
 
     function getXML() {
         return $this->xml;
+    }
+
+    function getFileOnDisk() {
+        return $this->fileondisk;
     }
 
 }
