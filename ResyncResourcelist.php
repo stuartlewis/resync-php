@@ -2,6 +2,7 @@
 
 include_once('util/http.php');
 include_once('util/file.php');
+include_once('ResyncURL.php');
 
 class ResyncResourcelist {
 
@@ -210,7 +211,7 @@ class ResyncResourcelist {
 
             // Run the callback method
             if (!empty($this->callback)) {
-                call_user_func($this->callback, $build);
+                call_user_func($this->callback, $build, new ResyncURL($url->loc, $url));
             }
         }
     }

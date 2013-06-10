@@ -2,6 +2,7 @@
 
 include_once('util/http.php');
 include_once('util/file.php');
+include_once('ResyncURL.php');
 
 class ResyncChangelist {
 
@@ -10,6 +11,9 @@ class ResyncChangelist {
 
     // The urlset raw XML
     private $xml;
+
+    // Sync since
+    private $since;
 
     // How many files created
     private $createdcount = 0;
@@ -82,7 +86,7 @@ class ResyncChangelist {
     }
 
     // Process the change list
-    function process($directory, $lastrun = '', $checksum = true, $force = false, $pretend = false) {
+    function process($directory, $since = '', $checksum = true, $force = false, $pretend = false) {
         // Start the timer
         $starttime = microtime(true);
 
@@ -92,15 +96,16 @@ class ResyncChangelist {
         $this->urls = array();
 
         // Was a date given?
-        if ($lastrun == '') {
-            $lastrun = new DateTime("0000-01-01T01:00:00Z", new DateTimeZone("UTC"));
+        if ($since == '') {
+            $since = new DateTime("0000-01-01T01:00:00Z", new DateTimeZone("UTC"));
         }
+        $this->since = $since;
 
         // Do we need to first process a sitemapindex?
         if ($this->sitemap) {
-            $this->processSitemapindex($this->sitemapxml, $directory, $lastrun, $checksum, $force, $pretend);
+            $this->processSitemapindex($this->sitemapxml, $directory, $checksum, $force, $pretend);
         } else {
-            $this->processUrlset($directory, $lastrun, $checksum, $force, $pretend);
+            $this->processUrlset($directory, $checksum, $force, $pretend);
         }
 
         // End the timer
@@ -108,7 +113,7 @@ class ResyncChangelist {
         $this->downloadtimer = $endtime - $starttime;
     }
 
-    private function processSitemapindex($sitemapxml, $directory, $lastrun, $checksum = true, $force = false, $pretend = false) {
+    private function processSitemapindex($sitemapxml, $directory, $checksum = true, $force = false, $pretend = false) {
         // Namespace handling
         $namespaces = $this->sitemapxml->getNameSpaces(true);
         if (!isset($namespaces['sm'])) $sac_ns['sm'] = 'http://www.sitemaps.org/schemas/sitemap/0.9';
@@ -127,15 +132,24 @@ class ResyncChangelist {
 
             // Is this a sitemapindex or a urlset?
             if ($xml->getName() == 'sitemapindex') {
-                $this->processSitemapindex($xml, $directory, $lastrun, $checksum, $force, $pretend);
+                $this->processSitemapindex($xml, $directory, $checksum, $force, $pretend);
             } else {
                 $this->xml = $xml;
-                $this->processUrlset($directory, $lastrun, $checksum, $force, $pretend);
+
+                // Is the chagelist older than the last run date?
+                $rs = $xml->children($namespaces['rs']);
+                $from = new DateTime($rs->md[0]->attributes()->from, new DateTimeZone("UTC"));
+                if ($from < $this->since) {
+                    echo 'Skipping! from: ' . $from->format('Y-m-d H:i:s') .
+                         ' is before last run: ' . $this->since->format('Y-m-d H:i:s');
+                } else {
+                    $this->processUrlset($directory, $checksum, $force, $pretend);
+                }
             }
         }
     }
 
-    private function processUrlset($directory, $lastrun, $checksum = true, $force = false, $pretend = false) {
+    private function processUrlset($directory, $checksum = true, $force = false, $pretend = false) {
         // Namespace handling
         $namespaces = $this->xml->getNameSpaces(true);
         if (!isset($namespaces['sm'])) $sac_ns['sm'] = 'http://www.sitemaps.org/schemas/sitemap/0.9';
@@ -187,7 +201,7 @@ class ResyncChangelist {
 
                 // Check if file has been updated since last run?
                 $lastmod = new DateTime($url->lastmod, new DateTimeZone("UTC"));
-                if (($lastmod > $lastrun) && (! $exists)) {
+                if (($lastmod > $this->since) && (! $exists)) {
                     $this->debug(' - Downloading file: ' . $build);
                     if (! $pretend) {
                         $start = microtime(true);
@@ -206,7 +220,7 @@ class ResyncChangelist {
 
                 } else {
                     $this->debug('  - Skipping! lastmod: ' . $lastmod->format('Y-m-d H:i:s') .
-                        ' is before last run: ' . $lastrun->format('Y-m-d H:i:s'));
+                        ' is before last run: ' . $this->since->format('Y-m-d H:i:s'));
                     $this->skipcount++;
                 }
 
@@ -226,14 +240,14 @@ class ResyncChangelist {
 
                     // Run the callback method
                     if (!empty($this->createcallback)) {
-                        call_user_func($this->createcallback, $build);
+                        call_user_func($this->createcallback, $build, new ResyncURL($url->loc, $url));
                     }
                 } else {
                     $this->updatedcount++;
 
                     // Run the callback method
                     if (!empty($this->updatecallback)) {
-                        call_user_func($this->updatecallback, $build);
+                        call_user_func($this->updatecallback, $build, new ResyncURL($url->loc, $url));
                     }
                 }
             } else if ($changetype == 'deleted') {
@@ -254,7 +268,7 @@ class ResyncChangelist {
 
                 // Run the callback method
                 if (!empty($this->deletecallback)) {
-                    call_user_func($this->deletecallback, $build);
+                    call_user_func($this->deletecallback, $build, new ResyncURL($url->loc, $url));
                 }
             }
 
@@ -308,7 +322,7 @@ class ResyncChangelist {
         $this->htmldebug = $html;
     }
 
-    // Display a debug mesage
+    // Display a debug message
     private function debug($message) {
         if ($this->debug) echo $message;
         if ($this->htmldebug) {
