@@ -1,23 +1,22 @@
 <?php
 
-include_once('http.php');
+class ResyncURL {
 
-class ResyncURL
-{
-    public $loc;
+    private $loc;
 
-    public $lastmod;
+    private $xml;
 
-    public $metadata = array();
-
-    function __construct($l, $lm = '', $md = []) {
-        $this->loc = $l;
-        $this->lastmod = $lm;
-        $this->metadata = $md;
+    function __construct($loc, $xml) {
+        $this->loc = $loc;
+        $this->xml = $xml;
     }
 
-    function get() {
-        return http_get($this->loc);
+    function getLoc() {
+        return $this->loc;
+    }
+
+    function getXML() {
+        return $this->xml;
     }
 
 }
