@@ -27,9 +27,11 @@ if (!file_exists('mapping.php')) {
         $namespaces = $resyncurl->getXML()->getNameSpaces(true);
         if (!isset($namespaces['sm'])) $sac_ns['sm'] = 'http://www.sitemaps.org/schemas/sitemap/0.9';
         $lns = $resyncurl->getXML()->children($namespaces['rs'])->ln;
+        $owner = '';
         foreach($lns as $ln) {
             if (($ln->attributes()->rel == 'describedby') && ($ln->attributes()->href != 'http://purl.org/dc/terms/')) {
                 $type = 'object';
+                $owner = $ln->attributes()->rel;
             }
         }
 
@@ -39,7 +41,7 @@ if (!file_exists('mapping.php')) {
         if ($type == 'metadata') {
             $metadataitems[] = $resyncurl;
         } else {
-            $objectitems[] = $resyncurl;
+            $objectitems[(string)$owner] = $resyncurl;
         }
     });
     //$resourcelist->enableDebug();
@@ -51,7 +53,28 @@ if (!file_exists('mapping.php')) {
     //    ($resourcelist->getDownloadSize() / $resourcelist->getDownloadDuration()) . ' Kb/s)' . "\n";
 
     // Process downloaded files
+    echo "\n- Processing metadata files:\n";
+    $counter = 0;
+    foreach ($metadataitems as $item) {
+        echo " - Item " . ++$counter . ' of ' . count($metadataitems) . "\n";
+        echo "  - Metadata file: " . $item->getFileOnDisk() . "\n";
+        $xml = simplexml_load_file($item->getFileOnDisk());
+        $namespaces = $xml->getNameSpaces(true);
+        if (!isset($namespaces['dc'])) $sac_ns['dc'] = 'http://purl.org/dc/terms/';
+        if (!isset($namespaces['dcterms'])) $sac_ns['dc'] = 'http://purl.org/dc/elements/1.1/';
+        $dc = $xml->children($namespaces['dc']);
+        $dcterms = $xml->children($namespaces['dcterms']);
+        $title = $dc->title[0];
+        $id = $dc->identifier[0];
+        $date = $dcterms->issued[0];
+        echo "  - Metadata:\n";
+        echo '   - Title: ' . $title . "\n";
+        echo '   - Identifier: ' . $id . "\n";
+        echo '   - Date: ' . $date . "\n";
 
+
+        echo "\n";
+    }
 }
 
 // Load the mapping file
