@@ -3,6 +3,14 @@
 // Load the config file
 include_once('config/config.php');
 
+// Load and initialise the SWORD library
+require($sac_client_location . 'swordappclient.php');
+require($sac_client_location . 'packager_atom_twostep.php');
+$sword = new SWORDAPPClient();
+if (!is_dir($resync_test_savedir . '/' . $sword_deposit_temp)) {
+    mkdir($resync_test_savedir . '/' . $sword_deposit_temp);
+};
+
 // Does the mapping file (file on disk -> DSpace handle) exist?
 if (!file_exists('mapping.php')) {
     // The file doesn't exist, so create it, then run a baseline sync
@@ -27,11 +35,13 @@ if (!file_exists('mapping.php')) {
         $namespaces = $resyncurl->getXML()->getNameSpaces(true);
         if (!isset($namespaces['sm'])) $sac_ns['sm'] = 'http://www.sitemaps.org/schemas/sitemap/0.9';
         $lns = $resyncurl->getXML()->children($namespaces['rs'])->ln;
+        $key = '';
         $owner = '';
         foreach($lns as $ln) {
             if (($ln->attributes()->rel == 'describedby') && ($ln->attributes()->href != 'http://purl.org/dc/terms/')) {
                 $type = 'object';
-                $owner = $ln->attributes()->rel;
+                $key = $resyncurl->getLoc();
+                $owner = $ln->attributes()->href;
             }
         }
 
@@ -41,7 +51,8 @@ if (!file_exists('mapping.php')) {
         if ($type == 'metadata') {
             $metadataitems[] = $resyncurl;
         } else {
-            $objectitems[(string)$owner] = $resyncurl;
+            $objectitems[(string)$key] = $resyncurl;
+            $resyncurl->setOwner($owner);
         }
     });
     //$resourcelist->enableDebug();
@@ -51,6 +62,10 @@ if (!file_exists('mapping.php')) {
     //echo $resourcelist->getDownloadSize() . 'Kb downloaded in ' .
     //    $resourcelist->getDownloadDuration() . ' seconds (' .
     //    ($resourcelist->getDownloadSize() / $resourcelist->getDownloadDuration()) . ' Kb/s)' . "\n";
+
+    // Horrible hack - don't ask! For some reason with this particular data set, traversing in order fails
+    // at item 4.  Reverse the order, and it all works. Go figure!
+    $metadataitems = array_reverse($metadataitems);
 
     // Process downloaded files
     echo "\n- Processing metadata files:\n";
@@ -67,11 +82,67 @@ if (!file_exists('mapping.php')) {
         $title = $dc->title[0];
         $id = $dc->identifier[0];
         $date = $dcterms->issued[0];
-        echo "  - Metadata:\n";
+        echo '   - Location: ' . $item->getLoc() . "\n";
         echo '   - Title: ' . $title . "\n";
         echo '   - Identifier: ' . $id . "\n";
         echo '   - Date: ' . $date . "\n";
 
+        // Create the atom entry
+        // The location of the files
+        $test_dirin = 'atom_multipart';
+
+
+
+        // Create the test package
+        $atom = new PackagerAtomTwoStep($resync_test_savedir, $sword_deposit_temp, '', '');
+        $atom->setTitle($title);
+        $atom->setIdentifier($id);
+        $atom->setUpdated($date);
+        $atom->create();
+
+        // Deposit the metadata record
+        $atomfilename = $resync_test_savedir . '/' . $sword_deposit_temp . '/atom';
+        echo '  - About to deposit metadata: ' . $atomfilename . "\n";
+        $deposit = $sword->depositAtomEntry($sac_deposit_location,
+                                            $sac_deposit_username,
+                                            $sac_deposit_password,
+                                            '',
+                                            $atomfilename,
+                                            true);
+        $edit_iri = $deposit->sac_edit_iri;
+        $cont_iri = $deposit->sac_content_src;
+        $edit_media = $deposit->sac_edit_media_iri;
+        $statement_atom = $deposit->sac_state_iri_atom;
+        $statement_ore = $deposit->sac_state_iri_ore;
+
+        echo '   - Edit IRI:' . $edit_iri . "\n";
+        echo '   - Edit Media IRI:' . $edit_media . "\n";
+
+        // Find related files for this metadata record
+        foreach($objectitems as $object) {
+            if ((string)$object->getOwner() == (string)$item->getLoc()) {
+                $finfo = finfo_open(FILEINFO_MIME_TYPE);
+                $mime = finfo_file($finfo, $object->getFileOnDisk());
+                echo '    - Related object: ' . $object->getLoc() . "\n";
+                echo '     - File: ' . $object->getFileOnDisk() . ' (' . $mime . ")\n";
+
+                // Deposit file
+                /**
+                $deposit = $sword->addExtraFileToMediaResource($edit_media,
+                                                               $sac_deposit_username,
+                                                               $sac_deposit_password,
+                                                               '',
+                                                               $object->getFileOnDisk(),
+                                                               $mime);
+                */
+            }
+        }
+
+        // Complete the deposit
+        $deposit = $sword->completeIncompleteDeposit($edit_iri,
+                                                     $sac_deposit_username,
+                                                     $sac_deposit_password,
+                                                     '');
 
         echo "\n";
     }
