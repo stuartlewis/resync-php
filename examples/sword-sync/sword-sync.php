@@ -73,16 +73,28 @@ if (!file_exists('mapping.php')) {
     foreach ($metadataitems as $item) {
         echo " - Item " . ++$counter . ' of ' . count($metadataitems) . "\n";
         echo "  - Metadata file: " . $item->getFileOnDisk() . "\n";
-        $xml = simplexml_load_file($item->getFileOnDisk());
+        libxml_use_internal_errors(true);
+        libxml_clear_errors();
+        $xml = @simplexml_load_file($item->getFileOnDisk());
+        foreach (libxml_get_errors() as $e) {
+            //var_dump($e);
+        }
+        if (count(libxml_get_errors()) > 0) {
+            // Something went wrong - perhaps this item doesn't exist any more?
+            echo "  - RESOURCE NO LONGER EXISTS!\n";
+            continue;
+        }
         $namespaces = $xml->getNameSpaces(true);
         if (!isset($namespaces['dc'])) $sac_ns['dc'] = 'http://purl.org/dc/terms/';
         if (!isset($namespaces['dcterms'])) $sac_ns['dc'] = 'http://purl.org/dc/elements/1.1/';
         $dc = $xml->children($namespaces['dc']);
         $dcterms = $xml->children($namespaces['dcterms']);
         $title = $dc->title[0];
+        $contributor = $dc->contributor[0];
         $id = $dc->identifier[0];
         $date = $dcterms->issued[0];
         echo '   - Location: ' . $item->getLoc() . "\n";
+        echo '   - Author: ' . $contributor . "\n";
         echo '   - Title: ' . $title . "\n";
         echo '   - Identifier: ' . $id . "\n";
         echo '   - Date: ' . $date . "\n";
@@ -91,11 +103,10 @@ if (!file_exists('mapping.php')) {
         // The location of the files
         $test_dirin = 'atom_multipart';
 
-
-
         // Create the test package
         $atom = new PackagerAtomTwoStep($resync_test_savedir, $sword_deposit_temp, '', '');
         $atom->setTitle($title);
+        $atom->addMetadata('creator', $contributor);
         $atom->setIdentifier($id);
         $atom->setUpdated($date);
         $atom->create();
@@ -127,14 +138,12 @@ if (!file_exists('mapping.php')) {
                 echo '     - File: ' . $object->getFileOnDisk() . ' (' . $mime . ")\n";
 
                 // Deposit file
-                /**
                 $deposit = $sword->addExtraFileToMediaResource($edit_media,
                                                                $sac_deposit_username,
                                                                $sac_deposit_password,
                                                                '',
                                                                $object->getFileOnDisk(),
                                                                $mime);
-                */
             }
         }
 
