@@ -12,7 +12,7 @@ class ResyncDiscover {
     private $xml;
 
     // List of discovered feeds
-    private $sitemaps;
+    private $capabilities;
 
     // Whether or not to display debug information
     private $debug = false;
@@ -22,7 +22,7 @@ class ResyncDiscover {
 
     // Try to download discovery information
     function __construct($url) {
-        $this->sitemaps = array();
+        $this->capabilities = array();
 
         // Check the URL finishes with a slash
         if (!(substr($url, - count($url)) === '/')) {
@@ -35,17 +35,17 @@ class ResyncDiscover {
             $xmllist = http_get($this->url);
             $this->xml = simplexml_load_string($xmllist);
             foreach ($this->xml->sitemap as $sitemap) {
-                array_push($this->sitemaps, (String)$sitemap->loc);
+                array_push($this->capabilities, (String)$sitemap->loc);
             }
         } else {
             $this->xml = '';
         }
-        if ($this->debug) print_r($this->sitemaps);
+        if ($this->debug) print_r($this->capabilities);
     }
 
     // Return the list of sitemaps
-    function getSitemaps() {
-        return $this->sitemaps;
+    function getCapabilities() {
+        return $this->capabilities;
     }
 
     // Return the fully formatted URL

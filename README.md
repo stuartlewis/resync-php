@@ -22,10 +22,10 @@ Discovery
 ```php
 include('ResyncDiscover.php');
 $resyncdiscover = new ResyncDiscover('http://resync.library.cornell.edu/');
-$sitemaps = $resyncdiscover->getSitemaps();
-echo ' - There were ' . count($sitemaps) . ' sitemaps found:' . "\n";
-foreach ($sitemaps as $sitemap) {
-    echo ' - ' . $sitemap . "\n";
+$capabilitylists = $resyncdiscover->getCapabilities();
+echo ' - There were ' . count($capabilitylists) . ' capability lists found:' . "\n";
+foreach ($capabilitylists as $capabilties) {
+    echo ' - ' . $capabilties . "\n";
 }
 ```
 
