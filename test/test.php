@@ -20,10 +20,10 @@
         }
         $host = 'http://resync.library.cornell.edu/';
         $resyncdiscover = new ResyncDiscover($host);
-        $sitemaps = $resyncdiscover->getCapabilities();
-        echo $host . ' - There were ' . count($sitemaps) . ' sitemaps found:' . "\n";
-        foreach ($sitemaps as $sitemap) {
-            echo ' - ' . $sitemap . "\n";
+        $capabilitylists = $resyncdiscover->getCapabilities();
+        echo $host . ' - There were ' . count($capabilitylists) . ' capability lists found:' . "\n";
+        foreach ($capabilitylists as $capabilitylist) {
+            echo ' - ' . $capabilitylist . "\n";
         }
     }
 
