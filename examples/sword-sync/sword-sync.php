@@ -26,7 +26,7 @@ if (!file_exists('mapping.php')) {
 
     // Run the baseline sync
     echo " - Running baseline sync...\n";
-    include_once('../../ResyncResourceList.php');
+    include_once('../../ResyncResourcelist.php');
     $resourcelist = new ResyncResourcelist('http://93.93.131.168:8080/rs/resourcelist.xml');
     $resourcelist->registerCallback(function($file, $resyncurl) {
         // Work out if this is a metadata object or a file
